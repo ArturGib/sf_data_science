@@ -3,7 +3,30 @@
 
 import numpy as np
 
-
+def predict_in_section(number, start_point, end_point) -> tuple:
+    """Возвращает отрезок в котором находится число
+        Функция вызывается в основном цикле поиска до тех пор,
+        пока начальная и конечная точка отрезка не совпадут.
+        Поиск числа основан на бинарном поиске.
+    Args:
+        number (_int_): _looking for this number_
+        start_point (_int_): _start point in section_
+        end_point (_int_): _end point in section_
+        
+    Returns:
+        tuple: (start_point:int, end_point:int) start and end point of section
+    """    
+    center = (start_point+end_point)/2 
+    center_min = int(center) 
+    center_max = center_min if center_min == center else center_min+1
+    
+    if number == center:
+        return center, center
+    elif number<center:
+        return start_point, center_min
+    else:
+        return center_max, end_point
+             
         
 def predict_random(number:int = 1) -> int:
     """Возвращает число попыток угадывания случайного числа number
@@ -15,10 +38,13 @@ def predict_random(number:int = 1) -> int:
         int: Номер попытки с которой удалось угадать число
     """    
     count = 0
+    start_point = 1
+    end_point = 100
     while True:
         count += 1
-        predict_number = np.random.randint(1, 101)
-        if predict_number == number:
+        #predict_number = np.random.randint(1, 101) 
+        start_point, end_point = predict_in_section(number, start_point, end_point)
+        if start_point == end_point:
             return count
         
 
@@ -46,5 +72,5 @@ def score_game(predict_random) -> int:
     return(score)
 
 if __name__ == "__main__":
-    
+     
     score_game(predict_random)
